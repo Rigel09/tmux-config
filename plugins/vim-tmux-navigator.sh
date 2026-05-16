@@ -39,7 +39,7 @@ bind_key_vim() {
   # sending C-/ according to https://github.com/tmux/tmux/issues/1827
   tmux bind-key -n "$key" if-shell "$is_vim" "send-keys '$key'" "$tmux_cmd"
   # tmux < 3.0 cannot parse "$tmux_cmd" as one argument, thus copying as multiple arguments
-  tmux bind-key -T copy-mode-vi "$key" $tmux_cmd
+  tmux bind-key -T copy-mode-vi "$key" "$tmux_cmd"
 }
 
 main() {
@@ -48,7 +48,6 @@ main() {
   move_up="$(get_tmux_option "@vim_navigator_mapping_up" 'C-k')"
   move_down="$(get_tmux_option "@vim_navigator_mapping_down" 'C-j')"
   move_prev="$(get_tmux_option "@vim_navigator_mapping_prev" 'C-\')"
-
   for k in $(echo "$move_left");  do bind_key_vim "$k" "select-pane -L"; done
   for k in $(echo "$move_down");  do bind_key_vim "$k" "select-pane -D"; done
   for k in $(echo "$move_up");    do bind_key_vim "$k" "select-pane -U"; done
@@ -60,6 +59,5 @@ main() {
   for k in $(echo "$clear_screen"); do tmux bind "$k" send-keys 'C-l'; done
 }
 
-if [ "$BASH_SOURCE" == "$0" ]; then
-  main "$@"
-fi
+
+main
